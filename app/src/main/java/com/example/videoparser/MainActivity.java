@@ -15,11 +15,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Video> videos = new ArrayList<>();
+    private List<Video> videos = new ArrayList<>();
     private ProgressBar progressBar;
     private VideosAdapter videosAdapter;
     private RecyclerView recyclerView;
@@ -33,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.activity_main_progressBar);
         recyclerView = findViewById(R.id.activity_main_rv_videos);
-        videosAdapter = new VideosAdapter(videos, this);
+        videosAdapter = new VideosAdapter(videos);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setAdapter(videosAdapter);
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
                 Elements titles, descriptions, durations;
                 //Connect to the website
                 Document document = Jsoup.connect(url).get();
@@ -64,9 +72,18 @@ public class MainActivity extends AppCompatActivity {
                 durations = document.select("span.content-summary");
                 //Add all to list
                 for (int i = 0; i < 13; i++) {
-                    videos.add(new Video(titles.get(i).text(), descriptions.get(i).text(), durations.get(i).text()));
+                    videos.add(new Video(
+                            titles.get(i).text(),
+                            descriptions.get(i).text(),
+                            dateFormat.parse(durations.get(i).text())));
                 }
-            } catch (IOException | NullPointerException e) {
+                Collections.sort(videos, new Comparator<Video>() {
+                    @Override
+                    public int compare(Video o1, Video o2) {
+                        return o1.getDuration().compareTo(o2.getDuration());
+                    }
+                });
+            } catch (IOException | NullPointerException | ParseException e) {
                 e.printStackTrace();
             }
             return null;

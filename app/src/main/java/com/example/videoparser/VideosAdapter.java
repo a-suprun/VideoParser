@@ -1,6 +1,5 @@
 package com.example.videoparser;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,9 @@ import java.util.List;
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoHolder> {
 
     private List<Video> videoList;
-    private Context context;
 
-    VideosAdapter(List <Video> videos, Context context) {
+    VideosAdapter(List <Video> videos) {
         this.videoList = videos;
-        this.context = context;
     }
 
     @NonNull
@@ -33,7 +30,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoHolde
     public void onBindViewHolder(@NonNull VideoHolder holder, int i) {
         Video video = videoList.get(i);
         holder.bind(video);
-//        holder.itemView.setTag(video);
     }
 
     @Override

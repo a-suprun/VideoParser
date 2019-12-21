@@ -1,13 +1,16 @@
 package com.example.videoparser;
 
-import android.graphics.Bitmap;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Video {
     private String title;
     private String description;
-    private String duration;
+    private Date duration;
 
-    public Video(String title, String description, String duration) {
+    public Video(String title, String description, Date duration) {
         this.title = title;
         this.description = description;
         this.duration = duration;
@@ -30,10 +33,12 @@ public class Video {
     }
 
     public String getDuration() {
-        return duration;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss", Locale.ENGLISH);
+        return dateFormat.format(duration);
+
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Date duration) {
         this.duration = duration;
     }
 }
